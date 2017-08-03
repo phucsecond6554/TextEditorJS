@@ -1,0 +1,11 @@
+Xin chào TextEditorJS là một plugin để tích hợp một texteditor đơn giản vào
+website, được làm bởi mình: Nguyễn Huỳnh Thành Phúc, một sinh viên.
+
+V1:(Ngày 3 tháng 8 năm 2017)
+ * Có chức năng in đậm, in nghiêng
+ * Thêm tag, mặc dù chưa được tiện dụng lắm
+ * Thêm link, một lần nữa chức năng này chưa hoàn thiện,
+ * Thêm img
+ * Chuyển đổi giữa html và text
+
+V2: (Chưa biết có V2 hay không ??????)
