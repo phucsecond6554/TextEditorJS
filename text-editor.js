@@ -11,6 +11,7 @@
     var tag = document.createElement("button");
     var link = document.createElement("button");
 		var image = document.createElement("button");
+		var getsave = document.createElement("button");
 
     //Dua cac element vao trang
     texteditor.appendChild(frame);
@@ -21,6 +22,7 @@
     texteditor.appendChild(tag);
     texteditor.appendChild(link);
 		texteditor.appendChild(image);
+		texteditor.appendChild(getsave);
 
 
 		//Add CSS style cho frame editor
@@ -35,10 +37,11 @@
     frame.style.width = "100%";
     frame.style.height = "300px";
     frame.contentWindow.document.designMode = "on";
+		frame.contentWindow.document.close();
 
     //Text area chua html code
     area.setAttribute("id","htmlArea");
-    area.setAttribute("disabled","true");
+    //area.setAttribute("disabled","true");
 		area.setAttribute("name", "text_content");
     area.style.width = "100%";
     area.style.height = "300px";
@@ -68,6 +71,10 @@
 		image.innerHTML = "Image";
 		image.setAttribute("id","image_btn");
 
+		//Get Save Button
+		getsave.innerHTML = "Get Save";
+		getsave.setAttribute("id","getsave_btn");
+
     bold.onclick = function(){
         let edit = frame.contentWindow;
         edit.focus();
@@ -82,15 +89,19 @@
         edit.focus();
     } // KHi nhan vao nut Italic se in nghieng van ban
 
-    var html_toggle = false;
+    var html_toggle = false; // Tuc la dang o trang thai visual(IFrame)
     html.onclick = function(){
         if(html_toggle == false){
             frame.style.display = "none";
             area.style.display = "block";
+						var edit = frame.contentWindow.document;
+		        area.value = edit.body.innerHTML;
             html_toggle = true;
         }else{
             frame.style.display = "block";
             area.style.display = "none";
+						var edit = frame.contentWindow.document;
+		        edit.body.innerHTML = area.value;
             html_toggle = false;
         }
     } // Chuyen doi text <-> html
@@ -120,8 +131,39 @@
 			}
 		}
 
-    setInterval(function(){
+		getsave.onclick = function(){
+			let edit = frame.contentWindow.document;
+
+			if(html_toggle == false){
+				edit.body.innerHTML = localStorage.getItem("autosave");
+			}else {
+				area.value = localStorage.getItem("autosave");
+			}
+		}
+
+    /*setInterval(function(){
         var edit = frame.contentWindow.document;
         area.value = edit.body.innerHTML;
-    },100);
+    },100);*/
+
+		// Luu du lieu tu dong vao LocalStorage
+		if(typeof(Storage) === "undefined"){
+			alert("Xin loi trinh duyet cua ban khong ho tro luu tu dong");
+		}
+
+		function auto_save(){
+			if(html_toggle === false){ // Dang o trang thai visual(IFrame)
+				let edit = frame.contentWindow.document;
+				if(edit.body.innerHTML != "" && edit.body.innerHTML != "<br>"){ // Neu khung nhap khac rong
+					localStorage.setItem("autosave", edit.body.innerHTML);
+				}
+			}else{ // Neu dang o trang thai html
+				if(area.value != "" && area.value != "<br>"){
+					localStorage.setItem("autosave",area.value);
+				}
+			}
+		}//Function auto_save
+
+
+		setInterval(auto_save,5000); //Tu dong luu du lieu sau moi 5s
 })();
